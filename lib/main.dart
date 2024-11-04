@@ -33,6 +33,8 @@ class MyApp extends StatelessWidget {
           bodyLarge: TextStyle(color: Colors.black54),
         ),
       ),
+      darkTheme:
+          ThemeData(primarySwatch: Colors.blue, brightness: Brightness.dark),
       initialRoute: WelcomeScreen.id,
       routes: {
         WelcomeScreen.id: (context) => const WelcomeScreen(),
