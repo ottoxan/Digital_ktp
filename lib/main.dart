@@ -14,7 +14,8 @@ void main() async {
   );
 
   runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (_) => ValueNotifier(ThemeMode.system)),
+    ChangeNotifierProvider(
+        create: (_) => ValueNotifier<ThemeMode>(ThemeMode.system)),
   ], child: const MyApp()));
 }
 
@@ -23,7 +24,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ThemeModeNotifier = context.watch<ValueNotifier<ThemeMode>>();
     return MaterialApp(
+      themeMode: ThemeModeNotifier.value,
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         textTheme: const TextTheme(
