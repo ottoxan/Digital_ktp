@@ -6,13 +6,11 @@ import 'package:flutter/material.dart';
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
-
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-
   final _auth = FirebaseAuth.instance;
 
   @override
@@ -64,21 +62,29 @@ class _SettingsPageState extends State<SettingsPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 40,),
+            const SizedBox(
+              height: 40,
+            ),
             const Text(
               'Settings',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.w500,color: Colors.black),
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black),
             ),
-            const SizedBox(height: 20,),
-            SizedBox(width: double.infinity,
-              child:  Row(
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: Row(
                 children: [
-                  const Text('Logout',
+                  const Text(
+                    'Logout',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
-                        color: Colors.black
-                    ),
+                        color: Colors.black),
                   ),
                   const Spacer(),
                   GestureDetector(
@@ -92,9 +98,10 @@ class _SettingsPageState extends State<SettingsPage> {
                         color: Colors.grey.shade200,
                         borderRadius: BorderRadius.circular(15),
                       ),
-
-                      child: const Icon(Icons.output, color: Colors.black,),
-
+                      child: const Icon(
+                        Icons.output,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ],

@@ -5,13 +5,17 @@ import 'package:digital_ktp/screens/welcome_screen.dart';
 import 'package:digital_ktp/screens/login_screen.dart';
 import 'package:digital_ktp/screens/registration_screen.dart';
 import 'package:digital_ktp/screens/home_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+
+  runApp(MultiProvider(providers: [
+    ChangeNotifierProvider(create: (_) => ValueNotifier(ThemeMode.system)),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
