@@ -3,8 +3,8 @@ import 'package:digital_ktp/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:digital_ktp/screens/home_screen.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-
 import '../rounded_button.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -18,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final LocalAuthentication auth = LocalAuthentication();
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   late String email;
@@ -57,7 +58,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: kTextFieldDecoration.copyWith(
                   hintText: 'Enter your email',
                 ),
-
               ),
               const SizedBox(
                 height: 8.0,
@@ -91,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       final user = await _auth.signInWithEmailAndPassword(
                           email: email, password: password);
                       Navigator.pushNamed(context, HomeScreen.id);
-                                          setState(() {
+                      setState(() {
                         showSpinner = false;
                       });
                     } catch (e) {
@@ -99,10 +99,10 @@ class _LoginScreenState extends State<LoginScreen> {
                         showSpinner = false;
                       });
                       Alert(
-                          context: context,
-                          title: "Failed Login",
-                          type: AlertType.error,
-                          desc: "Incorrect Email Or Password.")
+                              context: context,
+                              title: "Failed Login",
+                              type: AlertType.error,
+                              desc: "Incorrect Email Or Password.")
                           .show();
                       print(e);
                     }
@@ -110,6 +110,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   text: 'Login',
                 ),
               ),
+              const SizedBox(
+                height: 24.0,
+              ),
+              ElevatedButton(
+                  onPressed: () async {
+                    final bool canAuthenticateWithBiometrics =
+                        await auth.canCheckBiometrics;
+                    final bool canAuthenticate =
+                        canAuthenticateWithBiometrics ||
+                            await auth.isDeviceSupported();
+                  },
+                  child: const Icon(Icons.fingerprint))
             ],
           ),
         ),
