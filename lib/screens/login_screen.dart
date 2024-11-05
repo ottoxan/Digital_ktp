@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:digital_ktp/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:digital_ktp/screens/home_screen.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../rounded_button.dart';
+import 'package:local_auth_android/local_auth_android.dart';
 
 class LoginScreen extends StatefulWidget {
   static String id = 'login_screen';
@@ -120,6 +122,35 @@ class _LoginScreenState extends State<LoginScreen> {
                     final bool canAuthenticate =
                         canAuthenticateWithBiometrics ||
                             await auth.isDeviceSupported();
+
+                    print({'Cek Suport': canAuthenticate});
+
+                    final List<BiometricType> availableBiometrics =
+                        await auth.getAvailableBiometrics();
+
+                    print({'Cek Available': availableBiometrics});
+
+                    if (canAuthenticate) {
+                      try {
+                        final bool didAuthenticate = await auth.authenticate(
+                            options: const AuthenticationOptions(
+                                biometricOnly: true),
+                            localizedReason:
+                                'Masukkan sidik jari untuk tetap login ',
+                            authMessages: [
+                              AndroidAuthMessages(
+                                cancelButton: 'Batalkan',
+                                signInTitle: 'Digital KTP',
+                              )
+                            ]);
+                        print({'cek apakah finger benar': didAuthenticate});
+
+                        // Jika didAuthenticate bernilai true, maka ambil data dari localdatabase
+                        // Jsonfile , securestorage / get_storange / sqflite
+                      } on PlatformException catch (error) {
+                        print(error);
+                      }
+                    }
                   },
                   child: const Icon(Icons.fingerprint))
             ],
