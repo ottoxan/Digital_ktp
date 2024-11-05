@@ -7,7 +7,7 @@ class ThemeDataStyle {
     colorScheme: ColorScheme.light(
       surface: Colors.grey.shade100,
       primary: Color(0xFF243D41),
-      secondary: Color(0xFF243D41),
+      secondary: Color.fromARGB(255, 60, 102, 109),
     ),
   );
 

@@ -7,11 +7,10 @@ class MyCard extends StatelessWidget {
   final CardModel card;
   final _auth = FirebaseAuth.instance;
 
-  MyCard({ super.key, required this.card});
+  MyCard({super.key, required this.card});
 
   @override
   Widget build(BuildContext context) {
-
     getUserData() async {
       final email = _auth.currentUser?.email;
       if (email != null) {
@@ -39,11 +38,14 @@ class MyCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(card.cardType),
+                      Text(
+                        card.cardType,
+                        style: TextStyle(color: Colors.white),
+                      ),
                       const Padding(
                         padding: EdgeInsets.only(right: 8.0),
-                        child: Image(image:
-                        AssetImage('images/user.png'),
+                        child: Image(
+                          image: AssetImage('images/user.png'),
                           height: 100,
                         ),
                       ),
@@ -53,11 +55,26 @@ class MyCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('1.${userData.name}'),
-                      Text('2.${userData.tglLahir}'),
-                      Text('3.${userData.jenisKelamin}'),
-                      Text('4.${userData.alamat}'),
-                      const Text('5.'),
+                      Text(
+                        '1.${userData.name}',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        '2.${userData.tglLahir}',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        '3.${userData.jenisKelamin}',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      Text(
+                        '4.${userData.alamat}',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                      const Text(
+                        '5.',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ],
                   )
                 ],
@@ -76,8 +93,6 @@ class MyCard extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
       },
-
     );
   }
 }
-
