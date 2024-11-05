@@ -2,6 +2,9 @@ import 'package:digital_ktp/screens/home_screen.dart';
 import 'package:digital_ktp/screens/welcome_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../theme_provider.dart';
+import '../theme_data_style.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -28,12 +31,31 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.all(30),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              themeProvider.themeDataStyle == ThemeDataStyle.dark
+                  ? 'Dark Theme'
+                  : 'Light Theme',
+              style: const TextStyle(fontSize: 25.0),
+            ),
+            const SizedBox(height: 10.0),
+            Transform.scale(
+              scale: 1.4,
+              child: Switch(
+                value: themeProvider.themeDataStyle == ThemeDataStyle.dark
+                    ? true
+                    : false,
+                onChanged: (isOn) {
+                  themeProvider.changeTheme();
+                },
+              ),
+            ),
             const SizedBox(height: 30),
             const Text(
               'Account',

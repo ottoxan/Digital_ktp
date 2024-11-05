@@ -24,15 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
   final _auth = FirebaseAuth.instance;
   int _selectedIndex = 0;
 
-
   @override
   void initState() {
     super.initState();
     getCurrentUser();
     log('${_auth.currentUser?.email}');
   }
-
-
 
   void getCurrentUser() async {
     try {
@@ -53,8 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-
-  void _navigateBottomBar(int index){
+  void _navigateBottomBar(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -70,42 +66,37 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      bottomNavigationBar: Container(
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topRight: Radius.circular(20),
-            topLeft: Radius.circular(20),
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        bottomNavigationBar: Container(
+          child: ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topRight: Radius.circular(20),
+              topLeft: Radius.circular(20),
+            ),
+            child: BottomNavigationBar(
+                backgroundColor: Theme.of(context).colorScheme.secondary,
+                fixedColor: Colors.white,
+                type: BottomNavigationBarType.fixed,
+                elevation: 0,
+                currentIndex: _selectedIndex,
+                onTap: _navigateBottomBar,
+                items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.credit_card_outlined),
+                    label: "KTP",
+                  ),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.wallet), label: "Wallet"),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.settings), label: "Settings"),
+                  BottomNavigationBarItem(
+                      icon: Icon(Icons.help), label: "Help"),
+                ]),
           ),
-          child: BottomNavigationBar(
-              backgroundColor: const Color(0xff1C2E31),
-              fixedColor: Colors.white,
-              type: BottomNavigationBarType.fixed,
-              elevation: 0,
-              currentIndex: _selectedIndex,
-              onTap: _navigateBottomBar,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.credit_card_outlined),
-                  label: "KTP",
-                ),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.wallet),
-                    label: "Wallet"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.settings),
-                    label: "Settings"),
-                BottomNavigationBarItem(
-                    icon: Icon(Icons.help),
-                    label: "Help"),
-              ]),
         ),
-      ),
-      body: _pages [_selectedIndex]
-    );
+        body: _pages[_selectedIndex]);
   }
 }
-
 
 class dataDetails extends StatelessWidget {
   final String dataName;

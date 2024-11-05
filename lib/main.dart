@@ -1,4 +1,5 @@
 import 'package:digital_ktp/firebase_options.dart';
+import 'package:digital_ktp/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:digital_ktp/screens/welcome_screen.dart';
@@ -13,10 +14,12 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MultiProvider(providers: [
+  runApp(
     ChangeNotifierProvider(
-        create: (_) => ValueNotifier<ThemeMode>(ThemeMode.system)),
-  ], child: const MyApp()));
+      create: (context) => ThemeProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -24,17 +27,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ThemeModeNotifier = context.watch<ValueNotifier<ThemeMode>>();
     return MaterialApp(
-      themeMode: ThemeModeNotifier.value,
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        textTheme: const TextTheme(
-          bodyLarge: TextStyle(color: Colors.black54),
-        ),
-      ),
-      darkTheme:
-          ThemeData(primarySwatch: Colors.blue, brightness: Brightness.dark),
+      theme: Provider.of<ThemeProvider>(context).themeDataStyle,
       initialRoute: WelcomeScreen.id,
       routes: {
         WelcomeScreen.id: (context) => const WelcomeScreen(),
