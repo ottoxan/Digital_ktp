@@ -74,13 +74,14 @@ class _HomeScreenState extends State<HomeScreen> {
               topLeft: Radius.circular(20),
             ),
             child: BottomNavigationBar(
-                backgroundColor: Theme.of(context).colorScheme.secondary,
-                fixedColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                selectedItemColor: Theme.of(context).colorScheme.surface,
                 type: BottomNavigationBarType.fixed,
                 elevation: 0,
+                unselectedItemColor: Theme.of(context).colorScheme.surface,
                 currentIndex: _selectedIndex,
                 onTap: _navigateBottomBar,
-                items: const [
+                items: [
                   BottomNavigationBarItem(
                     icon: Icon(Icons.credit_card_outlined),
                     label: "KTP",
@@ -117,15 +118,15 @@ class dataDetails extends StatelessWidget {
         children: [
           Text(
             dataName.toUpperCase(),
-            style: const TextStyle(
-                color: Colors.black45,
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary,
                 fontSize: 15,
                 fontWeight: FontWeight.w700),
           ),
           Text(
             dataCloud.toUpperCase(),
-            style: const TextStyle(
-                color: Colors.black, fontSize: 15, fontWeight: FontWeight.w700),
+            style: TextStyle(
+                color: Theme.of(context).colorScheme.secondary, fontSize: 15, fontWeight: FontWeight.w700),
           ),
         ],
       ),

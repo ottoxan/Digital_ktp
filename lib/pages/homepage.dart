@@ -6,7 +6,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -16,7 +15,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _auth = FirebaseAuth.instance;
-
 
   @override
   void initState() {
@@ -31,7 +29,6 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -43,7 +40,11 @@ class _HomePageState extends State<HomePage> {
                 color: const Color(0xff1C2E31),
                 padding: const EdgeInsets.all(20),
                 alignment: Alignment.topCenter,
-                child: const Text("Digital KTP"),
+                child: Text(
+                  "Digital KTP",
+                  style:
+                      TextStyle(color: Colors.white),
+                ),
               ),
               Container(
                 padding: const EdgeInsets.only(bottom: 10),
@@ -146,8 +147,9 @@ class _HomePageState extends State<HomePage> {
                       height: 17,
                     ),
                     GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const NikQr()));
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const NikQr()));
                       },
                       child: Container(
                         width: 230,
@@ -161,7 +163,9 @@ class _HomePageState extends State<HomePage> {
                             const Text(
                               'N I K',
                               style: TextStyle(
-                                  fontWeight: FontWeight.w700, fontSize: 20),
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 20,
+                                  color: Colors.white),
                             ),
                             const SizedBox(
                               width: 20,
@@ -213,11 +217,17 @@ class _HomePageState extends State<HomePage> {
               children: [
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Text('Nama : ${userData.name}'.toUpperCase()),
+                  child: Text(
+                    'Nama : ${userData.name}'.toUpperCase(),
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Text('NIK : ${userData.nik}'),
+                  child: Text(
+                    'NIK : ${userData.nik}',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             );

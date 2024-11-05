@@ -57,12 +57,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
             const SizedBox(height: 30),
-            const Text(
+            Text(
               'Account',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w500,
-                color: Colors.black,
+                color: Theme.of(context).colorScheme.primary,
               ),
             ),
             const SizedBox(
@@ -87,12 +87,12 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(
               height: 40,
             ),
-            const Text(
+            Text(
               'Settings',
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
-                  color: Colors.black),
+                  color: Theme.of(context).colorScheme.primary),
             ),
             const SizedBox(
               height: 20,
@@ -101,12 +101,12 @@ class _SettingsPageState extends State<SettingsPage> {
               width: double.infinity,
               child: Row(
                 children: [
-                  const Text(
+                  Text(
                     'Logout',
                     style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
-                        color: Colors.black),
+                        color: Theme.of(context).colorScheme.primary),
                   ),
                   const Spacer(),
                   GestureDetector(
@@ -147,10 +147,10 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Text(
                   userData.name,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
                 ),
                 const SizedBox(
@@ -158,7 +158,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ),
                 Text(
                   userData.email,
-                  style: const TextStyle(fontSize: 16, color: Colors.grey),
+                  style: TextStyle(fontSize: 16, color: Theme.of(context).colorScheme.secondary),
                 ),
               ],
             );
