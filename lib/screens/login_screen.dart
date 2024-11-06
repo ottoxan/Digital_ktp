@@ -146,6 +146,35 @@ class _LoginScreenState extends State<LoginScreen> {
                         print({'cek apakah finger benar': didAuthenticate});
 
                         // Jika didAuthenticate bernilai true, maka ambil data dari localdatabase
+                        if (didAuthenticate == true) {
+                          try {
+                            // ignore: unused_local_variable
+                            final user = await _auth.signInWithEmailAndPassword(
+                                email: '123@gmail.com', password: '123456');
+                            Navigator.pushNamed(context, HomeScreen.id);
+                            setState(() {
+                              showSpinner = false;
+                            });
+                          } catch (e) {
+                            setState(() {
+                              showSpinner = false;
+                            });
+                            Alert(
+                                    context: context,
+                                    title: "Failed Login",
+                                    type: AlertType.error,
+                                    desc: "Incorrect Email Or Password.")
+                                .show();
+                            print(e);
+                          }
+                        } else {
+                          Alert(
+                                  context: context,
+                                  title: "Failed Login",
+                                  type: AlertType.error,
+                                  desc: "Incorrect Email Or Password.")
+                              .show();
+                        }
                         // Jsonfile , securestorage / get_storange / sqflite
                       } on PlatformException catch (error) {
                         print(error);
