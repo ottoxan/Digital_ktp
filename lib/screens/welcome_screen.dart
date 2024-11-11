@@ -99,6 +99,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             Hero(
               tag: 'loginButton',
               child: RoundedButton(
+                textColor: Colors.white,
                 color: const Color(0xFF243D41),
                 onPressed: () {
                   Navigator.pushNamed(context, LoginScreen.id);
@@ -109,6 +110,7 @@ class _WelcomeScreenState extends State<WelcomeScreen>
             Hero(
               tag: 'registerButton',
               child: RoundedButton(
+                textColor: Colors.white,
                 color: const Color(0xFF243D41),
                 onPressed: () {
                   Navigator.pushNamed(context, RegistrationScreen.id);

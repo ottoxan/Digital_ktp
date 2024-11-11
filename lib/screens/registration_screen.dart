@@ -115,6 +115,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 Hero(
                   tag: 'registerButton',
                   child: RoundedButton(
+                    textColor: Colors.white,
                     color: const Color(0xFF243D41),
                     onPressed: () async {
                       setState(() {
@@ -149,7 +150,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   onPressed: () => getImage(ImgSource.Both),
                   child: Text(
                     "Both".toUpperCase(),
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ],

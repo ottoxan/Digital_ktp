@@ -84,6 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 tag: 'loginButton',
                 child: RoundedButton(
                   color: const Color(0xFF243D41),
+                  textColor: Colors.white,
                   onPressed: () async {
                     setState(() {
                       showSpinner = true;

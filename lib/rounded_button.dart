@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class RoundedButton extends StatelessWidget {
-  RoundedButton({super.key, 
+  RoundedButton({
+    super.key,
     required this.color,
     required this.onPressed,
     required this.text,
+    required this.textColor,
   });
 
   final Color color;
+  final Color textColor;
   var onPressed;
   final String text;
 
@@ -26,6 +29,9 @@ class RoundedButton extends StatelessWidget {
           height: 42.0,
           child: Text(
             text,
+            style: TextStyle(
+              color: textColor,
+            ),
           ),
         ),
       ),
