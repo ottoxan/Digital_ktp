@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_ktp/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:digital_ktp/constants.dart';
@@ -8,7 +9,7 @@ import 'package:loading_overlay/loading_overlay.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:image_picker_gallery_camera/image_picker_gallery_camera.dart';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static String id = 'registration_screen';
@@ -25,35 +26,20 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   late String email;
   late String password;
 
-  var selectedMedia;
+  final nama = TextEditingController();
+  final email1 = TextEditingController();
+  final nik = TextEditingController();
+  final status = TextEditingController();
+  final tglLahir = TextEditingController();
+  final agama = TextEditingController();
+  final alamat = TextEditingController();
+  final berlakuHingga = TextEditingController();
+  final jenisKelamin = TextEditingController();
+  final kewarganegara = TextEditingController();
+  final pekerjaan = TextEditingController();
 
-  Future getImage(ImgSource source) async {
-    var image = await ImagePickerGC.pickImage(
-        enableCloseButton: true,
-        closeIcon: Icon(
-          Icons.close,
-          color: Colors.red,
-          size: 12,
-        ),
-        context: context,
-        source: source,
-        barrierDismissible: true,
-        cameraIcon: Icon(
-          Icons.camera_alt,
-          color: Colors.red,
-        ), //cameraIcon and galleryIcon can change. If no icon provided default icon will be present
-        cameraText: Text(
-          "From Camera",
-          style: TextStyle(color: Colors.red),
-        ),
-        galleryText: Text(
-          "From Gallery",
-          style: TextStyle(color: Colors.blue),
-        ));
-    setState(() {
-      selectedMedia = image;
-    });
-  }
+  List<String> _pictures = [];
+
 
   @override
   Widget build(BuildContext context) {
@@ -68,19 +54,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Container(
-                  child: Hero(
-                    tag: 'logo',
-                    child: SizedBox(
-                      height: 200.0,
-                      child: Image.asset('images/logo.png'),
-                    ),
+                Hero(
+                  tag: 'logo',
+                  child: SizedBox(
+                    height: 200.0,
+                    child: Image.asset('images/logo.png'),
                   ),
                 ),
                 const SizedBox(
                   height: 48.0,
                 ),
-                _imageView(),
                 _extractTextView(),
                 const SizedBox(
                   height: 48.0,
@@ -89,6 +72,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                   keyboardType: TextInputType.emailAddress,
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.black),
+                  controller: email1,
                   onChanged: (value) {
                     email = value;
                   },
@@ -110,7 +94,74 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       hintText: 'Enter your password'),
                 ),
                 const SizedBox(
-                  height: 24.0,
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: nama,
+                  hintText: 'Nama Lengkap',
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: nik,
+                  hintText: 'NIK',
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: tglLahir,
+                  hintText: 'Tanggal Lahir',
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: jenisKelamin,
+                  hintText: 'Jenis Kelamin',
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: alamat,
+                  hintText: 'Alamat',
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: agama,
+                  hintText: 'Agama',
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: status,
+                  hintText: 'Status Perkawinan',
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: kewarganegara,
+                  hintText: 'Kewarganegaraan',
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: pekerjaan,
+                  hintText: 'Pekerjaan',
+                ),
+                const SizedBox(
+                  height: 8.0,
+                ),
+                textFormField(
+                  controller: berlakuHingga,
+                  hintText: 'Berlaku Hinnga',
                 ),
                 Hero(
                   tag: 'registerButton',
@@ -118,6 +169,22 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     textColor: Colors.white,
                     color: const Color(0xFF243D41),
                     onPressed: () async {
+                      CollectionReference collRef =
+                          FirebaseFirestore.instance.collection('Users');
+                      collRef.add({
+                        'Email': email1.text,
+                        'agama': agama.text,
+                        'alamat': alamat.text,
+                        'berlakuHingga': berlakuHingga.text,
+                        'jenisKelamin': jenisKelamin.text,
+                        'kewarganegara': kewarganegara.text,
+                        'nama': nama.text,
+                        'nik': nik.text,
+                        'pekerjaan': pekerjaan.text,
+                        'status': status.text,
+                        'tglLahir': tglLahir.text,
+                      });
+
                       setState(() {
                         showSpinner = true;
                       });
@@ -140,19 +207,19 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 type: AlertType.error,
                                 desc: "Incorrect Email Or Password.")
                             .show();
-                        print(e);
                       }
                     },
                     text: 'Register',
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () => getImage(ImgSource.Both),
-                  child: Text(
-                    "Both".toUpperCase(),
-                    style: TextStyle(color: Colors.black),
-                  ),
+                  onPressed: onPressed,
+                  child: const Text("Add Pictures"),
                 ),
+                for (var picture in _pictures)
+                  Image.file(
+                    File(picture),
+                  )
               ],
             ),
           ),
@@ -161,29 +228,15 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  Widget _imageView() {
-    if (selectedMedia == null) {
-      return const Center(
-        child: Text("Pick An Image"),
-      );
-    }
-    return Center(
-        child: selectedMedia != null
-            ? Image.file(
-                File(selectedMedia.path),
-                width: 200,
-              )
-            : Center());
-  }
 
   Widget _extractTextView() {
-    if (selectedMedia == null) {
+    if (_pictures.isEmpty) {
       return const Center(
         child: Text("No result"),
       );
     }
     return FutureBuilder(
-        future: _extractText(File(selectedMedia.path)),
+        future: _extractText(File(_pictures.last)),
         builder: (context, snapshot) {
           return Text(
             snapshot.data ?? "",
@@ -204,5 +257,39 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     String text = recognizedText.text;
     textRecognizer.close();
     return text;
+  }
+
+  void onPressed() async {
+    List<String> pictures;
+    try {
+      pictures = await CunningDocumentScanner.getPictures() ?? [];
+      if (!mounted) return;
+      setState(() {
+        _pictures = pictures;
+      });
+    } catch (exception) {
+      // Handle exception here
+    }
+  }
+}
+
+class textFormField extends StatelessWidget {
+  const textFormField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+  });
+
+  final TextEditingController controller;
+  final String hintText;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      textAlign: TextAlign.center,
+      style: const TextStyle(color: Colors.black),
+      controller: controller,
+      decoration: kTextFieldDecoration.copyWith(hintText: hintText),
+    );
   }
 }
