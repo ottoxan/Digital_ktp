@@ -1,14 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_ktp/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:digital_ktp/constants.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:loading_overlay/loading_overlay.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import '../rounded_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:mnc_identifier_ocr/mnc_identifier_ocr.dart';
-import 'package:mnc_identifier_ocr/model/ocr_result_model.dart';
-import 'dart:async';
+import 'package:cunning_document_scanner/cunning_document_scanner.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static String id = 'registration_screen';
@@ -37,41 +38,13 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final kewarganegara = TextEditingController();
   final pekerjaan = TextEditingController();
 
+  List<String> _pictures = [];
+
   late String _jenisKelamin;
   List<String> listOfJenis = ['Laki-laki', 'Perempuan'];
 
   late String _kewarganegara;
   List<String> listOfNegara = ['WNI', 'WNA'];
-
-  OcrResultModel? result;
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> scanKtp() async {
-    OcrResultModel? res;
-    try {
-      res = await MncIdentifierOcr.startCaptureKtp(
-          withFlash: true, cameraOnly: true);
-    } catch (e) {
-      debugPrint('something goes wrong $e');
-    }
-
-    if (!mounted) return;
-
-    setState(() {
-      result = res;
-
-      nama.text = result?.ktp?.nama ?? '';
-      nik.text = result?.ktp?.nik ?? '';
-      tglLahir.text = result?.ktp?.tglLahir ?? '';
-      alamat.text = result?.ktp?.alamat ?? '';
-      agama.text = result?.ktp?.agama ?? '';
-      status.text = result?.ktp?.statusPerkawinan ?? '';
-      pekerjaan.text = result?.ktp?.pekerjaan ?? '';
-      berlakuHingga.text = result?.ktp?.berlakuHingga ?? '';
-      _jenisKelamin = result?.ktp?.jenisKelamin ?? '';
-      _kewarganegara = result?.ktp?.kewarganegaraan ?? '';
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,24 +69,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 const SizedBox(
                   height: 48.0,
                 ),
+                _extractTextView(),
                 const SizedBox(
                   height: 48.0,
-                ),
-                Stack(
-                  children: [
-                    Text('Ktp data: ${result?.toJson()}'),
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          ElevatedButton(
-                              onPressed: scanKtp,
-                              child: const Text('SCAN KTP')),
-                          const SizedBox(height: 8),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
                 TextField(
                   keyboardType: TextInputType.emailAddress,
@@ -142,6 +100,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 ),
                 const SizedBox(
                   height: 8.0,
+                ),
+                for (var picture in _pictures)
+                  Image.file(
+                    File(picture),
+                  ),
+                ElevatedButton(
+                  onPressed: onPressed,
+                  child: const Text("Photo KTP"),
                 ),
                 TextFormField(
                   controller: nama,
@@ -232,10 +198,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       try {
                         CollectionReference collRef =
                             FirebaseFirestore.instance.collection('Users');
-                        List data = [
-                          email1.text.isEmpty,
+                        List data =[email1.text.isEmpty,
                           agama.text,
-                          alamat.text,
+                           alamat.text,
                           berlakuHingga.text,
                           _jenisKelamin,
                           kewarganegara.text,
@@ -243,8 +208,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           nik.text,
                           pekerjaan.text,
                           status.text,
-                          tglLahir.text
-                        ];
+                          tglLahir.text];
                         collRef.add({
                           'Email': email1.text,
                           'agama': agama.text,
@@ -287,6 +251,49 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
         ),
       ),
     );
+  }
+
+  Widget _extractTextView() {
+    if (_pictures.isEmpty) {
+      return const Center(
+        child: Text("No result"),
+      );
+    }
+    return FutureBuilder(
+        future: _extractText(File(_pictures.last)),
+        builder: (context, snapshot) {
+          return Text(
+            snapshot.data ?? "",
+            style: TextStyle(
+              fontSize: 25,
+            ),
+          );
+        });
+  }
+
+  Future<String?> _extractText(File file) async {
+    final textRecognizer = TextRecognizer(
+      script: TextRecognitionScript.latin,
+    );
+    final InputImage inputImage = InputImage.fromFile(file);
+    final RecognizedText recognizedText =
+        await textRecognizer.processImage(inputImage);
+    String text = recognizedText.text;
+    textRecognizer.close();
+    return text;
+  }
+
+  void onPressed() async {
+    List<String> pictures;
+    try {
+      pictures = await CunningDocumentScanner.getPictures() ?? [];
+      if (!mounted) return;
+      setState(() {
+        _pictures = pictures;
+      });
+    } catch (exception) {
+      // Handle exception here
+    }
   }
 }
 
