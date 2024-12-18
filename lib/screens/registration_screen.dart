@@ -24,6 +24,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   bool showSpinner = false;
   late String email;
   late String password;
+  bool validate = false;
 
   final nama = TextEditingController();
   final email1 = TextEditingController();
@@ -258,7 +259,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                           'status': status.text,
                           'tglLahir': tglLahir.text,
                         });
-                        // ignore: unused_local_variable
                         final newUser =
                             await _auth.createUserWithEmailAndPassword(
                                 email: email, password: password);
@@ -324,7 +324,7 @@ class DropDownForm extends StatelessWidget {
 }
 
 class TextFormField extends StatelessWidget {
-  const TextFormField({
+  TextFormField({
     super.key,
     required this.controller,
     required this.hintText,
@@ -332,13 +332,17 @@ class TextFormField extends StatelessWidget {
 
   final TextEditingController controller;
   final String hintText;
+  bool validate = false;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
       style: const TextStyle(color: Colors.black),
-      decoration: kTextFieldDecoration.copyWith(hintText: hintText),
+      decoration: kTextFieldDecoration.copyWith(
+        hintText: hintText,
+        errorText: validate ? "Value Can't Be Empty" : null,
+      ),
     );
   }
 }
