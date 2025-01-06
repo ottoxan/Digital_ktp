@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:digital_ktp/constants.dart';
 import 'package:digital_ktp/firestore.dart';
+import 'package:digital_ktp/screens/registration_screen_ori.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -22,12 +23,13 @@ class _WalletState extends State<Wallet> {
   final FirestoreService firestoreService = FirestoreService();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  late String _typeCard;
+  List<String> typesCard = ['SIM A', 'SIM B', 'SIM C'];
+
   @override
   void initState() {
     super.initState();
   }
-
-
 
   void clearTextControllers() {
     email.clear();
@@ -63,6 +65,15 @@ class _WalletState extends State<Wallet> {
         content: SingleChildScrollView(
           child: Column(
             children: [
+              DropDownForm(
+                listOf: typesCard,
+                onChanged: (value) {
+                  setState(() {
+                    _typeCard = value!;
+                  });
+                },
+                hintText: 'Card Type',
+              ),
               buildTextField(controller: cardType, hint: 'Card Type'),
               buildTextField(controller: nameHolder, hint: 'Nama'),
               buildTextField(controller: tglLahir, hint: 'Tanggal Lahir'),
@@ -123,43 +134,47 @@ class _WalletState extends State<Wallet> {
     return SafeArea(
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 20),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: firestoreService.getCardsStream(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return const Text('No Cards');
+                  }
+
+                  final cardsList = snapshot.data!.docs;
+                  return ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: cardsList.length,
+                    itemBuilder: (context, index) {
+                      final document = cardsList[index];
+                      final docID = document.id;
+                      final data = document.data() as Map<String, dynamic>;
+
+                      return buildCard(
+                        docID: docID,
+                        cardT: data['cardType'],
+                        nameHolder: data['nameHolder'],
+                        tglLahir: data['tglLahir'],
+                        jenis: data['jenis'],
+                        alamat: data['alamat'],
+                        polDa: data['polDa'],
+                      );
+                    },
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(height: 20),
+                  );
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
             FloatingActionButton(
               onPressed: () => openNoteBox(),
-              child: const Text('Tambah Kartu'),
-            ),
-            StreamBuilder<QuerySnapshot>(
-              stream: firestoreService.getCardsStream(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) {
-                  return const Text('No Cards');
-                }
-
-                final cardsList = snapshot.data!.docs;
-                return ListView.separated(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: cardsList.length,
-                  itemBuilder: (context, index) {
-                    final document = cardsList[index];
-                    final docID = document.id;
-                    final data = document.data() as Map<String, dynamic>;
-
-                    return buildCard(
-                      docID: docID,
-                      cardT: data['cardType'],
-                      nameHolder: data['nameHolder'],
-                      tglLahir: data['tglLahir'],
-                      jenis: data['jenis'],
-                      alamat: data['alamat'],
-                      polDa: data['polDa'],
-                    );
-                  },
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 20),
-                );
-              },
+              child: const Icon(Icons.add),
             ),
           ],
         ),
